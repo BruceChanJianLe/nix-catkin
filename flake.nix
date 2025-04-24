@@ -25,15 +25,23 @@
 
           src = ./.;
 
-          buildInputs = [ pkgs.gcc ];
+          buildInputs = with pkgs; [
+            gcc
+            micromamba
+            cmake
+            git
+          ];
 
           buildPhase = ''
-            $CC -o hello ./src/hello.c
+            micromamba activate noetic
+            cmake -S ./catkin -B build
+            # nothing to build actually
+            cmake --build build
           '';
 
           installPhase = ''
             mkdir -p $out/bin/
-            cp hello $out/bin/
+            cp build/bin $out/bin/
           '';
         };
       }
@@ -47,36 +55,15 @@
       {
         default = pkgs.mkShell {
           buildInputs = with pkgs; [
+
             # Micromamba for Python environment management
             micromamba
 
             # Build tools
+            gcc
             cmake
             git
-            # pkg-config
 
-            # ROS dependencies
-            # boost
-            # cppcheck
-            # gtest
-            # log4cxx
-            # lz4
-            # tinyxml
-            # tinyxml2
-            # eigen
-
-            # Additional dependencies
-            # libGL
-            # gtk3
-            # libusb1
-
-            # Compression libraries
-            # bzip2
-            # zlib
-
-            # Network libraries
-            # curl
-            # openssl
           ];
         };
       }
